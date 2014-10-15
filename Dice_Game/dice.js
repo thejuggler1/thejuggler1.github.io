@@ -28,7 +28,7 @@ For extra challenge, here are some ideas:
 * Implement another dice game, such as Farkle
 
 */
-
+var highscore = 0;
 // TIP 1: Take a close look at restartGame below for some examples
 function randomRoll() {
     // return a random number between 1 and 6
@@ -38,6 +38,12 @@ function randomRoll() {
 // TIP 2: Work on this one first
 function rollDice() {
     // Roll all of the dice
+    $('.die.hold').removeClass('selectable');
+    $('.die.selectable').each(function() {
+          $(this).attr('data-roll', randomRoll());
+    });
+    
+    
     // TODO: remove the 'selectable' class from all elements that have both
     //       the 'die' and 'hold' class
 
@@ -52,7 +58,7 @@ function rollDice() {
 function holdDie() {
     // TODO: toggle the class 'hold' for the die that was just clicked
     // HINT: It will start with $(this)
-
+    $(this).addClass('hold');
     // Leave this here to update the state after the die is held
     $('.game').trigger('update-game-state');
 }
@@ -66,6 +72,7 @@ function restartGame() {
     // TODO: remove the class 'hold' from every element
     //       with the 'die' class
     $('.die').removeClass('hold');
+    $('.highscore').text(highscore);
     rollDice();
 }
 
@@ -90,6 +97,10 @@ function calculateScore() {
             total = total + roll;
         }
     });
+   
+    if(has1 && has4 && total > highscore) {
+        highscore = total;
+    }
     return {qualify: has1 && has4, value: total};
 }
 
