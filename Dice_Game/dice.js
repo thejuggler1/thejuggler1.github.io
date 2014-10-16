@@ -28,6 +28,12 @@ For extra challenge, here are some ideas:
 * Implement another dice game, such as Farkle
 
 */
+Parse.initialize("Zo6UFGWdv7Ub1Dk0exertHeiuggMIecQRDCjm7CC", "yRoF2PlnFF5xPxShkqjDgpbpIekdi5uaJRfs0sHd");
+var TestObject = Parse.Object.extend("TestObject");
+var testObject = new TestObject();
+testObject.save({foo: "bar"}).then(function(object) {
+  alert("yay! it worked");
+});
 var highscore = 0;
 // TIP 1: Take a close look at restartGame below for some examples
 function randomRoll() {
