@@ -29,12 +29,28 @@ For extra challenge, here are some ideas:
 
 */
 Parse.initialize("Zo6UFGWdv7Ub1Dk0exertHeiuggMIecQRDCjm7CC", "yRoF2PlnFF5xPxShkqjDgpbpIekdi5uaJRfs0sHd");
-var TestObject = Parse.Object.extend("TestObject");
-var testObject = new TestObject();
-testObject.save({foo: "bar"}).then(function(object) {
-  alert("yay! it worked");
-});
+
+// Simple syntax to create a new subclass of Parse.Object.
+var GameScore = Parse.Object.extend("GameScore");
 var highscore = 0;
+var query = new Parse.Query(GameScore);
+query.descending('highscore');
+query.limit(1);
+query.first({
+  success: function(object) {
+    highscore=object.get('highscore');
+    $('.highscore').text(highscore);
+      console.log(object)
+  },
+  error: function(error) {
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+// Create a new instance of that class.
+var gameScore = new GameScore();
+ 
+
 // TIP 1: Take a close look at restartGame below for some examples
 function randomRoll() {
     // return a random number between 1 and 6
@@ -106,6 +122,18 @@ function calculateScore() {
    
     if(has1 && has4 && total > highscore) {
         highscore = total;
+        gameScore.set('highscore', highscore);
+        gameScore.save(null, {
+            success: function(gameScore) {
+                // Execute any logic that should take place after the object is saved.
+                console.log('New object created with objectId: ' + gameScore.id);
+            },
+            error: function(gameScore, error) {
+                // Execute any logic that should take place if the save fails.
+                // error is a Parse.Error with an error code and message.
+                alert('Failed to create new object, with error code: ' + error.message);
+            }
+        });
     }
     return {qualify: has1 && has4, value: total};
 }
